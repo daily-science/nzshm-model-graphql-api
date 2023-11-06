@@ -18,7 +18,7 @@ class TestSeismicHazardModel(unittest.TestCase):
                 notes
                 source_logic_tree {
                     version
-                    notes
+                    title
                 }
             }
         }
@@ -27,7 +27,7 @@ class TestSeismicHazardModel(unittest.TestCase):
         executed = self.client.execute(QUERY)
         print(executed)
         self.assertTrue(
-            'corrected fault geometry' in executed['data']['seismic_hazard_model']['source_logic_tree']['notes']
+            'corrected fault geometry' in executed['data']['seismic_hazard_model']['source_logic_tree']['title']
         )
 
     def test_all_seismic_hazard_models(self):
@@ -41,7 +41,7 @@ class TestSeismicHazardModel(unittest.TestCase):
                     version
                         source_logic_tree {
                             version
-                            notes
+                            title
                         }
                     }
                 }
