@@ -31,6 +31,8 @@ werkzeug = "^2.3.3"
 
 # see https://github.com/orgs/python-poetry/discussions/7937
 urllib3 = "<2" 
+elasticsearch-dsl = ">=7.0.0,<8.0"
+elasticsearch = ">=7.0.0,<7.14"
 
 [tool.poetry.group.dev.dependencies]
 tox = ">=4.0"
