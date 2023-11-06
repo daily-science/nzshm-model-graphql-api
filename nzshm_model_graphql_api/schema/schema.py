@@ -6,9 +6,9 @@ import graphene
 import nzshm_model
 from graphene import relay
 
-from .seismic_hazard_model import SeismicHazardModel, SeismicHazardModelConnection
-
 import nzshm_model_graphql_api
+
+from .seismic_hazard_model import SeismicHazardModel, SeismicHazardModelConnection
 
 log = logging.getLogger(__name__)
 
