@@ -33,6 +33,7 @@ werkzeug = "^2.3.3"
 urllib3 = "<2" 
 elasticsearch-dsl = ">=7.0.0,<8.0"
 elasticsearch = ">=7.0.0,<7.14"
+graphene-elastic = "^0.8"
 
 [tool.poetry.group.dev.dependencies]
 tox = ">=4.0"

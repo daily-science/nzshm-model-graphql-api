@@ -6,6 +6,9 @@ try:
     import unzip_requirements  # noqa this is required by serverless-requirements
 except ImportError:
     pass
+finally:
+    # configure Anysearch
+    os.environ.setdefault("ANYSEARCH_PREFERRED_BACKEND", "Elasticsearch")
 
 import yaml
 from flask import Flask

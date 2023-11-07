@@ -44,7 +44,17 @@ loggers:
     handlers: [console_handler, file_handler]
     propagate: no
 
-  pynamodb:
+  # graphene_elastic:
+  #   level: DEBUG
+  #   handlers: [console_handler, file_handler]
+  #   propagate: no
+
+  # elasticsearch_dsl:
+  #   level: DEBUG
+  #   handlers: [console_handler, file_handler]
+  #   propagate: no
+
+  elasticsearch:
     level: DEBUG
     handlers: [console_handler, file_handler]
     propagate: no
@@ -59,15 +69,6 @@ loggers:
     handlers: [console_handler, file_handler]
     propagate: no
 
-  solvis_graphql_api:
-    level: INFO
-    handlers: [console_handler, file_handler]
-    propagate: no
-
-  solvis_store:
-    level: DEBUG
-    handlers: [console_handler, file_handler]
-    propagate: no
 
   backoff:
     level: INFO

@@ -9,6 +9,9 @@ from graphene import relay
 import nzshm_model_graphql_api
 
 from .seismic_hazard_model import SeismicHazardModel, SeismicHazardModelConnection
+from .openquake_hazard_solution import OpenquakeHazardSolution
+
+from graphene_elastic import ElasticsearchConnectionField
 
 log = logging.getLogger(__name__)
 
@@ -50,6 +53,9 @@ class QueryRoot(graphene.ObjectType):
     def resolve_seismic_hazard_model(root, info, version, **args):
         log.info('resolve_seismic_hazard_model args: %s version:%s' % (args, version))
         return SeismicHazardModel(version=nzshm_model.versions[version].version)
+
+    # Query definition
+    all_openquake_hazard_solutions = ElasticsearchConnectionField(OpenquakeHazardSolution)
 
 
 schema_root = graphene.Schema(query=QueryRoot, mutation=None, auto_camelcase=False)
