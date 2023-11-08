@@ -11,6 +11,8 @@ import nzshm_model_graphql_api
 from .seismic_hazard_model import SeismicHazardModel, SeismicHazardModelConnection
 from .openquake_hazard_solution import OpenquakeHazardSolution
 
+# from .openquake_hazard_solution_dsl import OpenquakeHazardSolution as OHS
+
 from graphene_elastic import ElasticsearchConnectionField
 
 log = logging.getLogger(__name__)

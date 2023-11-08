@@ -59,7 +59,7 @@ class KeyValuePair(InnerDoc):
     v = Text(fields={'raw': Keyword()})
 
 
-class OpenquakeHazardSolutionDocumentPost(Document):
+class OpenquakeHazardSolutionDocument(Document):
     '''Document schema - reverse engineered from raw object'''
     class Index:
         name = 'toshi_index'
@@ -80,7 +80,7 @@ class OpenquakeHazardSolutionDocumentPost(Document):
 class OpenquakeHazardSolution(ElasticsearchObjectType):
 
     class Meta(object):
-        document = OpenquakeHazardSolutionDocumentPost
+        document = OpenquakeHazardSolutionDocument
         interfaces = (relay.Node,)
 
         filter_backends = [
@@ -107,6 +107,7 @@ class OpenquakeHazardSolution(ElasticsearchObjectType):
             'created': {
                 'field:': 'created',
             },
+            'meta': {'field': 'meta.v'}
         }
 
         search_fields = {
