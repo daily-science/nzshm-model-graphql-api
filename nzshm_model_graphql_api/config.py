@@ -18,6 +18,6 @@ CW_METRICS_RESOLUTION = os.getenv('CW_METRICS_RESOLUTION', 60)  # 1 for high res
 
 # ES_HOST = (
 #    'https://search-nzshm22-toshi-api-es-test-ybx3zlp6hz2shrytj2ns4zx6bm.ap-southeast-2.es.amazonaws.com'  # TOSHI_TEST
-#)
+# )
 ES_HOST = "https://search-nzshm22-toshi-api-es-prod-cj4taqcgnefophpxzan55xeswa.ap-southeast-2.es.amazonaws.com"
 # # TOSHI_PROD

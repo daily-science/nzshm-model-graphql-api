@@ -5,41 +5,26 @@ We want to use ES query to find the relevant OpenquakeHazardSolution objects
 and subclass them based on their meta data.
 """
 
-import graphene
-from graphene import relay
+import datetime
 import os
 
-# import elasticsearch
-# import elasticsearch_dsl
-
-from graphene_elastic import (
-    ElasticsearchObjectType,
-    ElasticsearchConnectionField,
-)
-
-import datetime
+import graphene
 from anysearch.search_dsl import (
     Boolean,
-    connections,
     Completion,
     Date,
     Document,
+    Float,
+    Index,
     InnerDoc,
+    Integer,
     Keyword,
     Nested,
     Text,
-    Integer,
-    Float,
-    Index
+    connections,
 )
-
-from graphene_elastic.filter_backends import (
-    FilteringFilterBackend,
-    SearchFilterBackend,
-    # HighlightFilterBackend,
-    OrderingFilterBackend,
-    DefaultOrderingFilterBackend,
-)
+from graphene import relay
+from graphene_elastic import ElasticsearchConnectionField, ElasticsearchObjectType
 from graphene_elastic.constants import (
     LOOKUP_FILTER_PREFIX,
     LOOKUP_FILTER_TERM,
@@ -48,8 +33,19 @@ from graphene_elastic.constants import (
     LOOKUP_QUERY_EXCLUDE,
     LOOKUP_QUERY_IN,
 )
+from graphene_elastic.filter_backends import (  # HighlightFilterBackend,
+    DefaultOrderingFilterBackend,
+    FilteringFilterBackend,
+    OrderingFilterBackend,
+    SearchFilterBackend,
+)
 
 from nzshm_model_graphql_api.config import ES_HOST
+
+# import elasticsearch
+# import elasticsearch_dsl
+
+
 # Define a default Elasticsearch client
 connections.create_connection(hosts=ES_HOST)
 
@@ -61,6 +57,7 @@ class KeyValuePair(InnerDoc):
 
 class OpenquakeHazardSolutionDocument(Document):
     '''Document schema - reverse engineered from raw object'''
+
     class Index:
         name = 'toshi_index'
 
@@ -76,9 +73,9 @@ class OpenquakeHazardSolutionDocument(Document):
 
     meta = Nested(KeyValuePair, field="meta")
 
+
 # Object type definition
 class OpenquakeHazardSolution(ElasticsearchObjectType):
-
     class Meta(object):
         document = OpenquakeHazardSolutionDocument
         interfaces = (relay.Node,)
@@ -107,7 +104,7 @@ class OpenquakeHazardSolution(ElasticsearchObjectType):
             'created': {
                 'field:': 'created',
             },
-            'meta': {'field': 'meta.v'}
+            'meta': {'field': 'meta.v'},
         }
 
         search_fields = {
@@ -115,13 +112,9 @@ class OpenquakeHazardSolution(ElasticsearchObjectType):
             'produced_by': None,
         }
 
-        ordering_fields =  {
-            'created': 'created'
-        }
+        ordering_fields = {'created': 'created'}
 
-        ordering_defaults = (
-            '-created',  # Field name in the Elasticsearch document
-        )        
+        ordering_defaults = ('-created',)  # Field name in the Elasticsearch document
 
     def resolve_meta(root, info, **args):
         """We must manually resolve this fieldname"""
@@ -132,6 +125,7 @@ class OpenquakeHazardSolution(ElasticsearchObjectType):
     # def resolve_id(root, info, **args):
     #     print(f'{root.clazz_name}_{root.id}')
     #     return root.id
+
 
 # TEST
 demo = """

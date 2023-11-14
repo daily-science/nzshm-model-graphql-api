@@ -23,8 +23,10 @@ class SourceTypeEnum(graphene.Enum):
     # DistributedSourceModel = 30
 
 
-class InversionSource(graphene.ObjectType):
-    # tag = graphene.String()
+class InversionFaultModel(graphene.ObjectType):
+    type_code = "IFM"
+
+    tags = graphene.String()
     # notes = graphene.String()
     nrml_id = graphene.String()
     inversion_solution_id = graphene.String()
@@ -33,12 +35,15 @@ class InversionSource(graphene.ObjectType):
 
 
 class DistributedSource(graphene.ObjectType):
+    type_code = "DSM"
+
+    tags = graphene.String()    
     nrml_id = graphene.String()
 
 
 class SourceLogicTreeSource(graphene.Union):
     class Meta:
-        types = (InversionSource, DistributedSource)
+        types = (InversionFaultModel, DistributedSource)
 
 
 class SourceLogicTreeBranch(graphene.ObjectType):
@@ -55,6 +60,9 @@ class SourceLogicTreeGroup(graphene.ObjectType):
 
 
 class SourceLogicTree(graphene.ObjectType):
+    """
+    
+    """
     version = graphene.String()
     title = graphene.String()
 
@@ -63,6 +71,9 @@ class SourceLogicTree(graphene.ObjectType):
 
 
 class SeismicHazardModel(graphene.ObjectType):
+    """
+    Describe SHM
+    """
     version = graphene.String()
     notes = graphene.String()
     source_logic_tree = graphene.Field(SourceLogicTree)
@@ -75,17 +86,21 @@ class SeismicHazardModel(graphene.ObjectType):
         def get_sources(branch):
             if branch.onfault_nrml_id:
                 st = branch.inversion_solution_type or 'Undefined'
-                yield InversionSource(
+                tags = f'{InversionFaultModel.type_code} {branch.values}'
+                yield InversionFaultModel(
+                    tags = tags,
                     inversion_solution_id=branch.inversion_solution_id,
                     nrml_id=branch.onfault_nrml_id,
                     rupture_set_id=branch.rupture_set_id,
                     source_type=SourceTypeEnum[st].value,
                 )
             if branch.distributed_nrml_id:
-                yield (DistributedSource(nrml_id=branch.distributed_nrml_id))
+                tags = f'{DistributedSource.type_code} {branch.values}'
+                yield DistributedSource(nrml_id=branch.distributed_nrml_id, tags = tags)
 
         def get_branches(group):
             for branch in group.branches:
+                
                 yield SourceLogicTreeBranch(tag=str(branch.values), weight=branch.weight, sources=get_sources(branch))
 
         def get_groups(slt):

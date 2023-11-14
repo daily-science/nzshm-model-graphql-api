@@ -10,7 +10,7 @@ import nzshm_model_graphql_api
 from nzshm_model_graphql_api.schema import schema_root
 from nzshm_model_graphql_api.api import create_app
 
-
+os.environ.setdefault("ANYSEARCH_PREFERRED_BACKEND", "Elasticsearch")
 
 class TestFlaskApp(unittest.TestCase):
     """Tests the basic app create."""

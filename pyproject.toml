@@ -25,7 +25,6 @@ Flask-GraphQL = "^2.0.1"
 graphene = "<3"
 pyyaml = "^6.0"
 
-nzshm-model = "^0.3.0"
 nzshm-common = "^0.6.0"
 werkzeug = "^2.3.3"
 
@@ -34,6 +33,7 @@ urllib3 = "<2"
 elasticsearch-dsl = ">=7.0.0,<8.0"
 elasticsearch = ">=7.0.0,<7.14"
 graphene-elastic = "^0.8"
+nzshm-model = {path = "../../MISC/nzshm-model"}
 
 [tool.poetry.group.dev.dependencies]
 tox = ">=4.0"
