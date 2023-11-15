@@ -8,6 +8,10 @@ from graphene import relay
 
 log = logging.getLogger(__name__)
 
+from .logic_tree import (
+    LogicTree, LogicTreeBranchSet, LogicTreeBranch, 
+    InversionSource, DistributedSource
+)
 
 class TectonicRegionEnum(graphene.Enum):
     CRUSTAL = 'crustal'
@@ -23,49 +27,12 @@ class SourceTypeEnum(graphene.Enum):
     # DistributedSourceModel = 30
 
 
-class InversionSource(graphene.ObjectType):
-    # tag = graphene.String()
-    # notes = graphene.String()
-    nrml_id = graphene.String()
-    inversion_solution_id = graphene.String()
-    rupture_set_id = graphene.String()
-    source_type = graphene.Field(SourceTypeEnum)
-
-
-class DistributedSource(graphene.ObjectType):
-    nrml_id = graphene.String()
-
-
-class SourceLogicTreeSource(graphene.Union):
-    class Meta:
-        types = (InversionSource, DistributedSource)
-
-
-class SourceLogicTreeBranch(graphene.ObjectType):
-    tag = graphene.String()
-    weight = graphene.Float()
-    sources = graphene.List(SourceLogicTreeSource)
-
-
-class SourceLogicTreeGroup(graphene.ObjectType):
-    short_name = graphene.String()
-    long_name = graphene.String()
-    tectonic_region = graphene.Field(TectonicRegionEnum)
-    branches = graphene.List(SourceLogicTreeBranch)
-
-
-class SourceLogicTree(graphene.ObjectType):
-    version = graphene.String()
-    title = graphene.String()
-
-    # correlations
-    groups = graphene.List(SourceLogicTreeGroup)
 
 
 class SeismicHazardModel(graphene.ObjectType):
     version = graphene.String()
     notes = graphene.String()
-    source_logic_tree = graphene.Field(SourceLogicTree)
+    source_logic_tree = graphene.Field(LogicTree)
 
     def resolve_source_logic_tree(root, info, **args):
         log.info("resolve_source_logic_tree:")
@@ -86,15 +53,15 @@ class SeismicHazardModel(graphene.ObjectType):
 
         def get_branches(group):
             for branch in group.branches:
-                yield SourceLogicTreeBranch(tag=str(branch.values), weight=branch.weight, sources=get_sources(branch))
+                yield LogicTreeBranch(tag=str(branch.values), weight=branch.weight, uncertainty_models=get_sources(branch))
 
-        def get_groups(slt):
+        def get_branch_sets(slt):
             for group in slt.fault_system_lts:
-                yield SourceLogicTreeGroup(
+                yield LogicTreeBranchSet(
                     short_name=group.short_name, long_name=group.long_name, branches=get_branches(group)
                 )
 
-        return SourceLogicTree(version=slt.version, title=slt.title, groups=get_groups(slt))
+        return LogicTree(version=slt.version, title=slt.title, branch_sets=get_branch_sets(slt))
 
 
 class SeismicHazardModelConnection(relay.Connection):
